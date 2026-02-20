@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscopelympics | Winter Curling 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #091e2c;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #game-wrapper {
+    position: relative;
+    width: 95vw;
+    max-width: 1100px;
+    height: 90vh;
+    max-height: 700px;
+    background: linear-gradient(180deg, #0b2a3d 0%, #0d3347 30%, #0f3d54 60%, #0a2e40 100%);
+    border-radius: 28px;
+    border: 3px solid rgba(52, 162, 144, 0.25);
+    box-shadow: 0 0 80px rgba(52, 162, 144, 0.12), 0 0 200px rgba(52, 162, 144, 0.05), inset 0 1px 0 rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+
+  /* Stars background */
+  .stars {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Snowfall */
+  .snowflake {
+    position: absolute;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    pointer-events: none;
+    animation: snowfall linear infinite;
+    z-index: 1;
+  }
+  @keyframes snowfall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(720px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Aurora effect */
+  .aurora {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(180deg,
+      rgba(52, 162, 144, 0.08) 0%,
+      rgba(52, 162, 144, 0.03) 40%,
+      transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Mountains */
+  .mountains {
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+    height: 120px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Pine trees */
+  .tree {
+    position: absolute;
+    bottom: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Screens */
+  .screen {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.5s;
+  }
+  .screen.hidden { opacity: 0; pointer-events: none; }
+
+  /* Title screen */
+  #title-screen { text-align: center; }
+
+  .title-mascot-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 8px;
+  }
+
+  .game-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 62px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    line-height: 1;
+    position: relative;
+    text-shadow: 0 0 60px rgba(52, 162, 144, 0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .game-title .highlight { color: #34A290; }
+
+  .winter-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 10px 0 18px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 6px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+
+  .rings { display: flex; gap: 4px; }
+  .rings .ring {
+    width: 20px;
+    height: 20px;
+    border: 2.5px solid;
+    border-radius: 50%;
+  }
+  .rings .ring:nth-child(1) { border-color: #34A290; }
+  .rings .ring:nth-child(2) { border-color: #FFD700; }
+  .rings .ring:nth-child(3) { border-color: #fff; }
+  .rings .ring:nth-child(4) { border-color: #34A290; }
+  .rings .ring:nth-child(5) { border-color: #FFD700; }
+
+  .tagline {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #34A290;
+    font-style: italic;
+    margin-bottom: 8px;
+    text-shadow: 0 0 30px rgba(52, 162, 144, 0.3);
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    max-width: 420px;
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+
+  .btn-start {
+    background: linear-gradient(135deg, #34A290 0%, #2bb89f 50%, #34A290 100%);
+    color: white;
+    border: none;
+    padding: 18px 64px;
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 24px rgba(52, 162, 144, 0.4), 0 0 60px rgba(52, 162, 144, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-start:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 36px rgba(52, 162, 144, 0.55), 0 0 80px rgba(52, 162, 144, 0.2);
+  }
+  .btn-start::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    animation: btn-shine 3s ease-in-out infinite;
+  }
+  @keyframes btn-shine {
+    0% { left: -100%; }
+    50% { left: 100%; }
+    100% { left: 100%; }
+  }
+
+  .share-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+  }
+  .share-row a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: rgba(52, 162, 144, 0.2);
+    border: 1.5px solid rgba(52, 162, 144, 0.3);
+    color: #34A290;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 800;
+    transition: all 0.2s;
+  }
+  .share-row a:hover { background: #34A290; color: white; }
+
+  /* GAME SCREEN */
+  #game-screen {
+    padding: 16px 24px;
+    justify-content: flex-start;
+  }
+
+  .game-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0 8px;
+    z-index: 20;
+  }
+
+  .hud-box {
+    background: rgba(52, 162, 144, 0.15);
+    border: 1.5px solid rgba(52, 162, 144, 0.25);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+  }
+  .hud-box .label { opacity: 0.5; font-size: 10px; text-transform: uppercase; letter-spacing: 2px; }
+  .hud-box .value { font-size: 22px; font-weight: 900; color: #34A290; }
+
+  .round-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .deliverable-name {
+    color: #34A290;
+    font-size: 18px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    text-shadow: 0 0 20px rgba(52, 162, 144, 0.3);
+  }
+
+  /* Canvas area */
+  #game-canvas-container {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    margin-top: 12px;
+    z-index: 10;
+  }
+
+  canvas#curling-canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px;
+    cursor: crosshair;
+  }
+
+  /* Power bar */
+  .power-bar-container {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 260px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 19px;
+    border: 2px solid rgba(52, 162, 144, 0.3);
+    overflow: hidden;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    backdrop-filter: blur(10px);
+  }
+  .power-bar-fill {
+    width: 100%;
+    background: linear-gradient(0deg, #34A290 0%, #FFD700 50%, #ff6b6b 100%);
+    border-radius: 0 0 16px 16px;
+    transition: height 0.05s;
+  }
+  .power-label {
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  /* Instructions overlay */
+  .instructions-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(52, 162, 144, 0.3);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 20;
+    text-align: center;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+  }
+
+  /* RESULTS SCREEN */
+  #results-screen { text-align: center; }
+
+  .medal-icon {
+    font-size: 72px;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+  }
+
+  .results-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 42px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 4px;
+    text-shadow: 0 0 40px rgba(52, 162, 144, 0.3);
+  }
+
+  .results-subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  .score-card {
+    background: rgba(52, 162, 144, 0.1);
+    border: 2px solid rgba(52, 162, 144, 0.25);
+    border-radius: 20px;
+    padding: 24px 48px;
+    margin-bottom: 20px;
+    display: inline-block;
+    backdrop-filter: blur(10px);
+  }
+  .score-card .big-score {
+    font-size: 60px;
+    font-weight: 900;
+    color: #34A290;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(52, 162, 144, 0.4);
+  }
+  .score-card .score-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+  }
+
+  .round-scores {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .round-score-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 10px 14px;
+    text-align: center;
+    min-width: 95px;
+  }
+  .round-score-item .rs-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: #34A290;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .round-score-item .rs-val {
+    font-size: 22px;
+    font-weight: 900;
+    color: white;
+  }
+
+  .btn-row { display: flex; gap: 12px; justify-content: center; }
+  .btn-play-again {
+    background: linear-gradient(135deg, #34A290 0%, #2bb89f 100%);
+    color: white;
+    border: none;
+    padding: 14px 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(52, 162, 144, 0.35);
+  }
+  .btn-play-again:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(52,162,144,0.5); }
+
+  .btn-share-result {
+    background: transparent;
+    color: white;
+    border: 2px solid rgba(255,255,255,0.2);
+    padding: 14px 32px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-share-result:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+
+  /* Inscope mini logo */
+  .inscope-badge {
+    position: absolute;
+    top: 18px;
+    left: 22px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+    z-index: 25;
+    letter-spacing: 0.5px;
+  }
+  .inscope-badge span { color: #34A290; }
+
+  /* CTA bar at bottom */
+  .cta-bar {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    z-index: 20;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .cta-bar a {
+    color: #34A290;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .cta-bar a:hover { text-decoration: underline; }
+
+  /* Floating particles */
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    animation: float-particle linear infinite;
+  }
+  @keyframes float-particle {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-400px) scale(0.5); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div id="game-wrapper">
+  <!-- Inscope Badge -->
+  <div class="inscope-badge">in<span>scope</span></div>
+
+  <!-- Aurora glow -->
+  <div class="aurora"></div>
+
+  <!-- Stars -->
+  <canvas class="stars" id="stars-canvas"></canvas>
+
+  <!-- Snowflakes (generated by JS) -->
+  <div id="snow-container"></div>
+
+  <!-- Floating particles -->
+  <div id="particle-container"></div>
+
+  <!-- Mountains -->
+  <svg class="mountains" viewBox="0 0 1100 120" preserveAspectRatio="none">
+    <path d="M0,120 L0,80 Q100,30 180,65 Q280,95 350,55 Q400,30 480,50 Q560,70 620,45 Q700,15 780,55 Q860,80 940,40 Q1020,10 1100,50 L1100,120 Z" fill="rgba(10,30,45,0.8)"/>
+    <path d="M0,120 L0,90 Q150,60 280,85 Q400,100 500,75 Q600,55 720,80 Q840,100 960,70 Q1050,50 1100,75 L1100,120 Z" fill="rgba(12,38,55,0.9)"/>
+    <!-- Snow caps on mountains -->
+    <path d="M180,65 Q185,58 190,65" fill="rgba(255,255,255,0.15)"/>
+    <path d="M480,50 Q487,40 494,50" fill="rgba(255,255,255,0.15)"/>
+    <path d="M780,55 Q788,45 796,55" fill="rgba(255,255,255,0.12)"/>
+    <path d="M940,40 Q948,28 956,40" fill="rgba(255,255,255,0.18)"/>
+  </svg>
+
+  <!-- Trees -->
+  <div class="tree" style="left: 2%; bottom: 10px;">
+    <svg width="36" height="70" viewBox="0 0 36 70"><polygon points="18,4 3,52 33,52" fill="rgba(20,80,70,0.6)"/><polygon points="18,16 6,58 30,58" fill="rgba(15,75,65,0.5)"/><rect x="15" y="56" width="6" height="14" fill="rgba(40,60,55,0.4)"/></svg>
+  </div>
+  <div class="tree" style="left: 6%; bottom: 10px;">
+    <svg width="50" height="95" viewBox="0 0 50 95"><polygon points="25,4 4,68 46,68" fill="rgba(20,80,70,0.5)"/><polygon points="25,20 8,74 42,74" fill="rgba(15,75,65,0.4)"/><rect x="21" y="72" width="8" height="18" fill="rgba(40,60,55,0.35)"/></svg>
+  </div>
+  <div class="tree" style="right: 3%; bottom: 10px;">
+    <svg width="44" height="80" viewBox="0 0 44 80"><polygon points="22,4 4,58 40,58" fill="rgba(20,80,70,0.55)"/><polygon points="22,18 7,64 37,64" fill="rgba(15,75,65,0.45)"/><rect x="18" y="62" width="7" height="16" fill="rgba(40,60,55,0.35)"/></svg>
+  </div>
+  <div class="tree" style="right: 8%; bottom: 10px;">
+    <svg width="32" height="60" viewBox="0 0 32 60"><polygon points="16,4 2,44 30,44" fill="rgba(20,80,70,0.45)"/><rect x="13" y="44" width="5" height="12" fill="rgba(40,60,55,0.3)"/></svg>
+  </div>
+
+  <!-- ===== TITLE SCREEN ===== -->
+  <div id="title-screen" class="screen">
+    <div id="title-mascots" style="display:flex;gap:8px;margin-bottom:12px;"></div>
+    <div class="game-title">
+      <span class="highlight">INSCOPE</span>LYMPICS
+    </div>
+    <div class="winter-badge">
+      <span>WINTER</span>
+      <div class="rings">
+        <div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      </div>
+      <span>2 0 2 6</span>
+    </div>
+    <div class="tagline">Close the Books. Win the Gold.</div>
+    <div class="subtitle">
+      Curl your deliverables into the house before the deadline.
+      5 rounds. 5 financial statements. How fast can you close?
+    </div>
+    <button class="btn-start" onclick="startGame()">START GAME</button>
+    <div class="share-row">
+      <span>SHARE</span>
+      <a href="#" onclick="shareTwitter(); return false;" title="Share on X">ð</a>
+      <a href="#" onclick="shareLinkedIn(); return false;" title="Share on LinkedIn">in</a>
+    </div>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="game-screen" class="screen hidden">
+    <div class="game-hud">
+      <div class="hud-box">
+        <div>
+          <div class="label">Score</div>
+          <div class="value" id="hud-score">0</div>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <div class="round-label" id="round-label">Round 1 of 5</div>
+        <div class="deliverable-name" id="deliverable-name">Balance Sheet</div>
+      </div>
+      <div class="hud-box">
+        <div>
+          <div class="label">Time</div>
+          <div class="value" id="hud-timer">0.0s</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="game-canvas-container">
+      <canvas id="curling-canvas"></canvas>
+      <div class="power-bar-container" id="power-bar-container" style="display:none;">
+        <div class="power-label">POWER</div>
+        <div class="power-bar-fill" id="power-bar-fill" style="height: 0%;"></div>
+      </div>
+      <div class="instructions-overlay" id="instructions">Click to aim</div>
+    </div>
+  </div>
+
+  <!-- ===== RESULTS SCREEN ===== -->
+  <div id="results-screen" class="screen hidden">
+    <div class="medal-icon" id="medal-icon">ð¥</div>
+    <div class="results-title" id="results-title">Gold Medal!</div>
+    <div class="results-subtitle" id="results-subtitle">Books closed in record time!</div>
+    <div class="score-card">
+      <div class="big-score" id="final-score">0</div>
+      <div class="score-label">Total Points</div>
+    </div>
+    <div class="round-scores" id="round-scores"></div>
+    <div class="btn-row">
+      <button class="btn-play-again" onclick="startGame()">PLAY AGAIN</button>
+      <button class="btn-share-result" onclick="shareResult()">SHARE SCORE</button>
+    </div>
+    <div class="share-row" style="margin-top:16px;">
+      <span>SHARE</span>
+      <a href="#" onclick="shareTwitter(); return false;" title="Share on X">ð</a>
+      <a href="#" onclick="shareLinkedIn(); return false;" title="Share on LinkedIn">in</a>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-bar">
+    AI-Powered Financial Reporting &middot; <a href="https://www.inscopehq.com" target="_blank">inscopehq.com</a>
+  </div>
+</div>
+
+<script>
+// ==================== STARS ====================
+(function createStars() {
+  const c = document.getElementById('stars-canvas');
+  const wrapper = document.getElementById('game-wrapper');
+  c.width = wrapper.clientWidth;
+  c.height = wrapper.clientHeight;
+  const ctx = c.getContext('2d');
+  for (let i = 0; i < 80; i++) {
+    const x = Math.random() * c.width;
+    const y = Math.random() * c.height * 0.6;
+    const r = Math.random() * 1.5 + 0.3;
+    const alpha = Math.random() * 0.4 + 0.1;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  }
+})();
+
+// ==================== SNOWFALL ====================
+(function createSnow() {
+  const container = document.getElementById('snow-container');
+  for (let i = 0; i < 25; i++) {
+    const flake = document.createElement('div');
+    flake.className = 'snowflake';
+    flake.textContent = ['*', '.', 'Â·', 'â¢'][Math.floor(Math.random()*4)];
+    flake.style.left = Math.random() * 100 + '%';
+    flake.style.fontSize = (6 + Math.random() * 8) + 'px';
+    flake.style.animationDuration = (6 + Math.random() * 12) + 's';
+    flake.style.animationDelay = Math.random() * 12 + 's';
+    flake.style.opacity = 0.15 + Math.random() * 0.3;
+    flake.style.color = 'white';
+    container.appendChild(flake);
+  }
+})();
+
+// ==================== FLOATING PARTICLES ====================
+(function createParticles() {
+  const container = document.getElementById('particle-container');
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = (10 + Math.random() * 80) + '%';
+    p.style.bottom = '0';
+    p.style.background = `rgba(52, 162, 144, ${0.1 + Math.random() * 0.2})`;
+    p.style.animationDuration = (8 + Math.random() * 15) + 's';
+    p.style.animationDelay = Math.random() * 10 + 's';
+    container.appendChild(p);
+  }
+})();
+
+// ==================== GAME STATE ====================
+const DELIVERABLES = [
+  { name: 'Balance Sheet', short: 'BS', color: '#34A290', accent: '#5ED4C0' },
+  { name: 'Income Statement', short: 'IS', color: '#3B82F6', accent: '#60A5FA' },
+  { name: 'Cash Flow', short: 'CF', color: '#8B5CF6', accent: '#A78BFA' },
+  { name: 'Disclosures', short: 'DN', color: '#F59E0B', accent: '#FBBF24' },
+  { name: 'Footnotes', short: 'FN', color: '#EF4444', accent: '#F87171' }
+];
+
+let gameState = {
+  currentRound: 0,
+  totalScore: 0,
+  roundScores: [],
+  startTime: 0,
+  phase: 'aim',
+  aimAngle: 0,
+  power: 0,
+  powerDir: 1,
+  stone: null,
+  stoneVx: 0,
+  stoneVy: 0,
+  existingStones: [],
+  animFrame: null
+};
+
+const canvas = document.getElementById('curling-canvas');
+const ctx = canvas.getContext('2d');
+
+// ==================== SCREENS ====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  const badge = document.querySelector('.inscope-badge');
+  if (badge) badge.style.display = (id === 'game-screen') ? 'none' : 'block';
+}
+
+function startGame() {
+  gameState = {
+    currentRound: 0,
+    totalScore: 0,
+    roundScores: [],
+    startTime: Date.now(),
+    phase: 'aim',
+    aimAngle: -Math.PI/2,
+    power: 0,
+    powerDir: 1,
+    stone: null,
+    stoneVx: 0,
+    stoneVy: 0,
+    existingStones: [],
+    animFrame: null
+  };
+  showScreen('game-screen');
+  resizeCanvas();
+  startRound();
+}
+
+function startRound() {
+  const d = DELIVERABLES[gameState.currentRound];
+  document.getElementById('round-label').textContent = `Round ${gameState.currentRound + 1} of 5`;
+  document.getElementById('deliverable-name').textContent = d.name;
+  document.getElementById('hud-score').textContent = gameState.totalScore;
+
+  gameState.phase = 'aim';
+  gameState.aimAngle = -Math.PI/2;
+  gameState.power = 0;
+  gameState.powerDir = 1;
+  gameState.stone = null;
+  gameState.stoneVx = 0;
+  gameState.stoneVy = 0;
+
+  document.getElementById('power-bar-container').style.display = 'none';
+  document.getElementById('instructions').style.opacity = '1';
+  document.getElementById('instructions').textContent = 'Click to set your aim direction';
+
+  if (gameState.animFrame) cancelAnimationFrame(gameState.animFrame);
+  gameLoop();
+}
+
+// ==================== CANVAS ====================
+function resizeCanvas() {
+  const container = document.getElementById('game-canvas-container');
+  canvas.width = container.clientWidth;
+  canvas.height = container.clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+
+function getHouseCenter() {
+  return { x: canvas.width / 2, y: canvas.height * 0.28 };
+}
+
+function getStartPos() {
+  return { x: canvas.width / 2, y: canvas.height * 0.82 };
+}
+
+// ==================== DRAWING ====================
+function drawRink() {
+  // Dark ice surface with subtle gradient
+  const iceGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  iceGrad.addColorStop(0, '#0d2d3f');
+  iceGrad.addColorStop(0.3, '#0f3549');
+  iceGrad.addColorStop(0.7, '#112f42');
+  iceGrad.addColorStop(1, '#0a2535');
+  ctx.fillStyle = iceGrad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Subtle ice texture
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.03)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < canvas.width; i += 40) {
+    ctx.beginPath();
+    ctx.moveTo(i, 0);
+    ctx.lineTo(i, canvas.height);
+    ctx.stroke();
+  }
+  for (let i = 0; i < canvas.height; i += 40) {
+    ctx.beginPath();
+    ctx.moveTo(0, i);
+    ctx.lineTo(canvas.width, i);
+    ctx.stroke();
+  }
+
+  // Rink border glow
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.12)';
+  ctx.lineWidth = 2;
+  const pad = 15;
+  const br = 12;
+  ctx.beginPath();
+  ctx.roundRect(pad, pad, canvas.width - pad*2, canvas.height - pad*2, br);
+  ctx.stroke();
+
+  // Center line
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.08)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8, 8]);
+  ctx.beginPath();
+  ctx.moveTo(canvas.width/2, pad);
+  ctx.lineTo(canvas.width/2, canvas.height - pad);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Hog line
+  const hogY = canvas.height * 0.65;
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.12)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(canvas.width * 0.12, hogY);
+  ctx.lineTo(canvas.width * 0.88, hogY);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(52, 162, 144, 0.2)';
+  ctx.font = '600 9px Inter';
+  ctx.textAlign = 'right';
+  ctx.fillText('HOG LINE', canvas.width * 0.88, hogY - 6);
+
+  // Tee line
+  const house = getHouseCenter();
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.08)';
+  ctx.beginPath();
+  ctx.moveTo(canvas.width * 0.12, house.y);
+  ctx.lineTo(canvas.width * 0.88, house.y);
+  ctx.stroke();
+
+  // Draw house (target)
+  drawHouse(house);
+}
+
+function drawHouse(center) {
+  const rings = [
+    { r: 80, color: 'rgba(52, 162, 144, 0.06)', stroke: 'rgba(52, 162, 144, 0.15)', label: '25' },
+    { r: 60, color: 'rgba(52, 162, 144, 0.10)', stroke: 'rgba(52, 162, 144, 0.2)', label: '50' },
+    { r: 40, color: 'rgba(255, 215, 0, 0.08)', stroke: 'rgba(255, 215, 0, 0.2)', label: '75' },
+    { r: 20, color: 'rgba(52, 162, 144, 0.2)', stroke: 'rgba(52, 162, 144, 0.35)', label: '100' }
+  ];
+
+  rings.forEach(ring => {
+    // Glow
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, ring.r + 2, 0, Math.PI * 2);
+    ctx.fillStyle = ring.color;
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, ring.r, 0, Math.PI * 2);
+    ctx.fillStyle = ring.color;
+    ctx.fill();
+    ctx.strokeStyle = ring.stroke;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+
+  // Score labels
+  ctx.font = '700 10px Inter';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(52, 162, 144, 0.35)';
+  rings.forEach(ring => {
+    ctx.fillText(ring.label, center.x + ring.r - 11, center.y + 4);
+  });
+
+  // Center dot with glow
+  const centerGlow = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, 12);
+  centerGlow.addColorStop(0, 'rgba(52, 162, 144, 0.3)');
+  centerGlow.addColorStop(1, 'rgba(52, 162, 144, 0)');
+  ctx.beginPath();
+  ctx.arc(center.x, center.y, 12, 0, Math.PI * 2);
+  ctx.fillStyle = centerGlow;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(center.x, center.y, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#34A290';
+  ctx.fill();
+
+  // ISSUED label
+  ctx.font = '700 9px Inter';
+  ctx.fillStyle = 'rgba(52, 162, 144, 0.3)';
+  ctx.textAlign = 'center';
+  ctx.fillText('ISSUED', center.x, center.y + 98);
+}
+
+// ==================== SVG MASCOT SYSTEM ====================
+const mascotImages = {};
+const MASCOT_W = 100;
+const MASCOT_H = 100;
+
+function buildMascotSVG(color, accent, short) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <defs>
+      <radialGradient id="bg_${short}" cx="40%" cy="35%" r="60%">
+        <stop offset="0%" stop-color="${accent}"/>
+        <stop offset="100%" stop-color="${color}"/>
+      </radialGradient>
+      <radialGradient id="sh_${short}" cx="35%" cy="30%" r="50%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.35)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+      <filter id="glow_${short}">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="${color}" flood-opacity="0.4"/>
+      </filter>
+    </defs>
+
+    <!-- Shadow -->
+    <ellipse cx="50" cy="92" rx="28" ry="5" fill="rgba(0,0,0,0.2)"/>
+
+    <!-- Body -->
+    <circle cx="50" cy="48" r="36" fill="url(#bg_${short})" filter="url(#glow_${short})"/>
+    <circle cx="50" cy="48" r="36" fill="url(#sh_${short})"/>
+
+    <!-- Eyes - simple, bold, Wiz-style -->
+    <ellipse cx="38" cy="44" rx="7" ry="8" fill="white"/>
+    <ellipse cx="62" cy="44" rx="7" ry="8" fill="white"/>
+    <ellipse cx="39" cy="45" rx="4.5" ry="5.5" fill="#1a1a2e"/>
+    <ellipse cx="63" cy="45" rx="4.5" ry="5.5" fill="#1a1a2e"/>
+    <!-- Highlights -->
+    <circle cx="36" cy="41" r="2.5" fill="white"/>
+    <circle cx="60" cy="41" r="2.5" fill="white"/>
+    <circle cx="41" cy="48" r="1" fill="rgba(255,255,255,0.6)"/>
+    <circle cx="65" cy="48" r="1" fill="rgba(255,255,255,0.6)"/>
+
+    <!-- Happy smile -->
+    <path d="M39,58 Q50,68 61,58" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+    <!-- Cheek blush -->
+    <ellipse cx="28" cy="54" rx="5" ry="3.5" fill="rgba(255,255,255,0.12)"/>
+    <ellipse cx="72" cy="54" rx="5" ry="3.5" fill="rgba(255,255,255,0.12)"/>
+
+    <!-- Badge -->
+    <circle cx="50" cy="72" r="10" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    <text x="50" y="76" font-family="Inter,sans-serif" font-size="10" font-weight="800" fill="white" text-anchor="middle">${short}</text>
+
+    <!-- Sparkle -->
+    <g transform="translate(80,22)" fill="white" opacity="0.6">
+      <rect x="-1" y="-4" width="2" height="8" rx="1"/>
+      <rect x="-4" y="-1" width="8" height="2" rx="1"/>
+    </g>
+  </svg>`;
+}
+
+function buildTitleMascotSVG(color, accent, short) {
+  // Smaller version for title screen row
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="48" height="48">
+    <defs>
+      <radialGradient id="tbg_${short}" cx="40%" cy="35%" r="60%">
+        <stop offset="0%" stop-color="${accent}"/>
+        <stop offset="100%" stop-color="${color}"/>
+      </radialGradient>
+    </defs>
+    <circle cx="30" cy="28" r="22" fill="url(#tbg_${short})"/>
+    <circle cx="30" cy="28" r="22" fill="rgba(255,255,255,0.15)"/>
+    <ellipse cx="23" cy="26" rx="4" ry="4.5" fill="white"/>
+    <ellipse cx="37" cy="26" rx="4" ry="4.5" fill="white"/>
+    <circle cx="23.5" cy="26.5" rx="2.5" ry="3" fill="#1a1a2e"/>
+    <circle cx="37.5" cy="26.5" rx="2.5" ry="3" fill="#1a1a2e"/>
+    <circle cx="22" cy="24" r="1.5" fill="white"/>
+    <circle cx="36" cy="24" r="1.5" fill="white"/>
+    <path d="M24,34 Q30,40 36,34" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <text x="30" y="48" font-family="Inter,sans-serif" font-size="8" font-weight="700" fill="${accent}" text-anchor="middle" opacity="0.8">${short}</text>
+  </svg>`;
+}
+
+function initMascots() {
+  DELIVERABLES.forEach(d => {
+    const svg = buildMascotSVG(d.color, d.accent, d.short);
+    const img = new Image();
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    mascotImages[d.short] = img;
+  });
+
+  // Title screen mascots
+  const titleContainer = document.getElementById('title-mascots');
+  if (titleContainer) {
+    titleContainer.innerHTML = '';
+    DELIVERABLES.forEach(d => {
+      const svg = buildTitleMascotSVG(d.color, d.accent, d.short);
+      const div = document.createElement('div');
+      div.innerHTML = svg;
+      div.style.animation = `float-mascot 3s ease-in-out infinite`;
+      div.style.animationDelay = (Math.random() * 2) + 's';
+      titleContainer.appendChild(div);
+    });
+  }
+}
+
+// Add float animation for title mascots
+const floatStyle = document.createElement('style');
+floatStyle.textContent = `@keyframes float-mascot { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }`;
+document.head.appendChild(floatStyle);
+
+initMascots();
+
+function drawStone(x, y, deliverable, alpha = 1) {
+  ctx.globalAlpha = alpha;
+  const img = mascotImages[deliverable.short];
+  if (img && img.complete) {
+    const scale = 0.85;
+    const w = MASCOT_W * scale;
+    const h = MASCOT_H * scale;
+    ctx.drawImage(img, x - w/2, y - h/2, w, h);
+  } else {
+    ctx.beginPath();
+    ctx.arc(x, y, 22, 0, Math.PI*2);
+    ctx.fillStyle = deliverable.color;
+    ctx.fill();
+    ctx.font = 'bold 11px Inter';
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(deliverable.short, x, y);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawAimArrow() {
+  if (gameState.phase !== 'aim') return;
+  const start = getStartPos();
+  const len = 55;
+  const endX = start.x + Math.cos(gameState.aimAngle) * len;
+  const endY = start.y + Math.sin(gameState.aimAngle) * len;
+
+  // Dotted path
+  ctx.strokeStyle = 'rgba(52, 162, 144, 0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 8]);
+  const longEndX = start.x + Math.cos(gameState.aimAngle) * 300;
+  const longEndY = start.y + Math.sin(gameState.aimAngle) * 300;
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(longEndX, longEndY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Arrow line with glow
+  ctx.shadowColor = 'rgba(52, 162, 144, 0.4)';
+  ctx.shadowBlur = 8;
+  ctx.strokeStyle = '#34A290';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+  ctx.lineTo(endX, endY);
+  ctx.stroke();
+
+  // Arrowhead
+  const headLen = 10;
+  const angle = gameState.aimAngle;
+  ctx.beginPath();
+  ctx.moveTo(endX, endY);
+  ctx.lineTo(endX - headLen * Math.cos(angle - 0.4), endY - headLen * Math.sin(angle - 0.4));
+  ctx.moveTo(endX, endY);
+  ctx.lineTo(endX - headLen * Math.cos(angle + 0.4), endY - headLen * Math.sin(angle + 0.4));
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
+// ==================== GAME LOGIC ====================
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawRink();
+
+  // Draw existing stones
+  gameState.existingStones.forEach(s => {
+    drawStone(s.x, s.y, s.deliverable, 0.5);
+  });
+
+  const start = getStartPos();
+  const d = DELIVERABLES[gameState.currentRound];
+
+  // Update timer
+  const elapsed = ((Date.now() - gameState.startTime) / 1000).toFixed(1);
+  document.getElementById('hud-timer').textContent = elapsed + 's';
+
+  if (gameState.phase === 'aim') {
+    drawStone(start.x, start.y, d);
+    drawAimArrow();
+    gameState.aimAngle += 0.015;
+    if (gameState.aimAngle > -0.3) gameState.aimAngle = -Math.PI + 0.3;
+  }
+
+  if (gameState.phase === 'power') {
+    drawStone(start.x, start.y, d);
+
+    ctx.strokeStyle = 'rgba(52, 162, 144, 0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 8]);
+    const longEndX = start.x + Math.cos(gameState.aimAngle) * 300;
+    const longEndY = start.y + Math.sin(gameState.aimAngle) * 300;
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(longEndX, longEndY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    gameState.power += gameState.powerDir * 1.5;
+    if (gameState.power >= 100) { gameState.power = 100; gameState.powerDir = -1; }
+    if (gameState.power <= 0) { gameState.power = 0; gameState.powerDir = 1; }
+    document.getElementById('power-bar-fill').style.height = gameState.power + '%';
+  }
+
+  if (gameState.phase === 'sliding') {
+    gameState.stoneVx *= 0.985;
+    gameState.stoneVy *= 0.985;
+    gameState.stone.x += gameState.stoneVx;
+    gameState.stone.y += gameState.stoneVy;
+
+    if (gameState.stone.x < 20 || gameState.stone.x > canvas.width - 20) {
+      gameState.stoneVx *= -0.5;
+      gameState.stone.x = Math.max(20, Math.min(canvas.width - 20, gameState.stone.x));
+    }
+
+    gameState.existingStones.forEach(s => {
+      const dx = gameState.stone.x - s.x;
+      const dy = gameState.stone.y - s.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 42) {
+        const nx = dx / dist;
+        const ny = dy / dist;
+        gameState.stoneVx += nx * 2;
+        gameState.stoneVy += ny * 2;
+        s.x -= nx * 2;
+        s.y -= ny * 2;
+      }
+    });
+
+    // Trail effect
+    ctx.beginPath();
+    ctx.arc(gameState.stone.x, gameState.stone.y, 18, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${hexToRgb(d.color)}, 0.08)`;
+    ctx.fill();
+
+    drawStone(gameState.stone.x, gameState.stone.y, d);
+
+    const speed = Math.sqrt(gameState.stoneVx**2 + gameState.stoneVy**2);
+    if (speed < 0.2 || gameState.stone.y < -30 || gameState.stone.y > canvas.height + 30) {
+      gameState.phase = 'scored';
+      scoreRound();
+      return;
+    }
+  }
+
+  gameState.animFrame = requestAnimationFrame(gameLoop);
+}
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+function scoreRound() {
+  const house = getHouseCenter();
+  const dx = gameState.stone.x - house.x;
+  const dy = gameState.stone.y - house.y;
+  const dist = Math.sqrt(dx*dx + dy*dy);
+
+  let points = 0;
+  if (dist <= 20) points = 100;
+  else if (dist <= 40) points = 75;
+  else if (dist <= 60) points = 50;
+  else if (dist <= 80) points = 25;
+  else points = Math.max(0, Math.round(10 - dist/30));
+
+  const roundTime = (Date.now() - gameState.startTime) / 1000;
+  const timeBonus = Math.max(0, Math.round(20 - roundTime / 5));
+  points += timeBonus;
+
+  gameState.roundScores.push({
+    deliverable: DELIVERABLES[gameState.currentRound],
+    points: points,
+    dist: Math.round(dist)
+  });
+  gameState.totalScore += points;
+  document.getElementById('hud-score').textContent = gameState.totalScore;
+
+  if (dist <= 100) {
+    gameState.existingStones.push({
+      x: gameState.stone.x,
+      y: gameState.stone.y,
+      deliverable: DELIVERABLES[gameState.currentRound]
+    });
+  }
+
+  const inst = document.getElementById('instructions');
+  inst.style.opacity = '1';
+  const dName = DELIVERABLES[gameState.currentRound].name;
+  if (points >= 90) inst.textContent = `${dName}: +${points} pts â Perfect close!`;
+  else if (points >= 50) inst.textContent = `${dName}: +${points} pts â Solid filing!`;
+  else if (points > 10) inst.textContent = `${dName}: +${points} pts â Needs revision`;
+  else inst.textContent = `${dName}: +${points} pts â Material misstatement!`;
+
+  gameState.currentRound++;
+
+  if (gameState.currentRound >= 5) {
+    setTimeout(showResults, 1800);
+  } else {
+    setTimeout(startRound, 1800);
+  }
+
+  // Keep drawing final state
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawRink();
+  gameState.existingStones.forEach(s => {
+    drawStone(s.x, s.y, s.deliverable, 0.5);
+  });
+  if (gameState.stone && dist <= 100) {
+    drawStone(gameState.stone.x, gameState.stone.y, DELIVERABLES[gameState.currentRound - 1]);
+  }
+}
+
+function showResults() {
+  const total = gameState.totalScore;
+  const elapsed = ((Date.now() - gameState.startTime) / 1000).toFixed(1);
+
+  let medal, title, subtitle;
+  if (total >= 400) { medal = 'ð¥'; title = 'Gold Medal!'; subtitle = `Books closed in ${elapsed}s â You're a closing machine!`; }
+  else if (total >= 280) { medal = 'ð¥'; title = 'Silver Medal!'; subtitle = `${elapsed}s â Strong close, minor adjustments needed`; }
+  else if (total >= 150) { medal = 'ð¥'; title = 'Bronze Medal!'; subtitle = `${elapsed}s â Filed on time, but barely!`; }
+  else { medal = 'ð'; title = 'Audit Finding'; subtitle = `${elapsed}s â The partners want to have a word...`; }
+
+  document.getElementById('medal-icon').textContent = medal;
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-subtitle').textContent = subtitle;
+  document.getElementById('final-score').textContent = total;
+
+  const scoresDiv = document.getElementById('round-scores');
+  scoresDiv.innerHTML = '';
+  gameState.roundScores.forEach(r => {
+    const item = document.createElement('div');
+    item.className = 'round-score-item';
+    item.innerHTML = `<div class="rs-name">${r.deliverable.short}</div><div class="rs-val">${r.points}</div>`;
+    scoresDiv.appendChild(item);
+  });
+
+  showScreen('results-screen');
+}
+
+// ==================== INPUT ====================
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const mx = (e.clientX - rect.left) * scaleX;
+  const my = (e.clientY - rect.top) * scaleY;
+
+  if (gameState.phase === 'aim') {
+    const start = getStartPos();
+    gameState.aimAngle = Math.atan2(my - start.y, mx - start.x);
+    if (gameState.aimAngle > -0.15) gameState.aimAngle = -0.15;
+    if (gameState.aimAngle < -Math.PI + 0.15) gameState.aimAngle = -Math.PI + 0.15;
+
+    gameState.phase = 'power';
+    gameState.power = 0;
+    gameState.powerDir = 1;
+    document.getElementById('power-bar-container').style.display = 'block';
+    document.getElementById('instructions').textContent = 'Click again to set power!';
+    return;
+  }
+
+  if (gameState.phase === 'power') {
+    const start = getStartPos();
+    const speedMult = 4 + (gameState.power / 100) * 10;
+    gameState.stoneVx = Math.cos(gameState.aimAngle) * speedMult;
+    gameState.stoneVy = Math.sin(gameState.aimAngle) * speedMult;
+    gameState.stone = { x: start.x, y: start.y };
+    gameState.phase = 'sliding';
+
+    document.getElementById('power-bar-container').style.display = 'none';
+    document.getElementById('instructions').textContent = 'Sliding...';
+    setTimeout(() => { document.getElementById('instructions').style.opacity = '0'; }, 800);
+    return;
+  }
+});
+
+// ==================== SHARING ====================
+function shareTwitter() {
+  const text = gameState.totalScore > 0
+    ? `I scored ${gameState.totalScore} points in the Inscopelympics Curling Challenge! Can you close the books faster? Try it out!`
+    : `Think you can close the books faster than me? Try the Inscopelympics Curling Challenge!`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent('https://inscopehq.com')}`, '_blank');
+}
+
+function shareLinkedIn() {
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://inscopehq.com')}`, '_blank');
+}
+
+function shareResult() {
+  const text = `Inscopelympics Results:\nScore: ${gameState.totalScore} pts\n${gameState.roundScores.map(r => `${r.deliverable.name}: ${r.points}pts`).join('\n')}\n\nCan you close faster? inscopehq.com`;
+  if (navigator.share) {
+    navigator.share({ title: 'Inscopelympics Curling', text: text, url: 'https://inscopehq.com' });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('.btn-share-result');
+      btn.textContent = 'COPIED!';
+      setTimeout(() => btn.textContent = 'SHARE SCORE', 2000);
+    });
+  }
+}
+
+// ==================== INIT ====================
+resizeCanvas();
+</script>
+</body>
+</html>
